@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Receipt Generator - Dashboard</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="main-header">
+    <div class="header-content">
+      <h1>Receipt Generator</h1>
+      <div class="user-menu">
+        <button id="user-button" class="user-button">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg>
+        </button>
+        <div id="user-dropdown" class="dropdown-menu hidden">
+          <div class="dropdown-item user-info">
+            <p class="user-name">cblpro</p>
+            <p class="user-role">Administrator</p>
+          </div>
+          <div class="dropdown-divider"></div>
+          <a href="index.html" class="dropdown-item">Log out</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="main-content">
+    <div class="dashboard-container">
+      <h2>Select Receipt Type</h2>
+      <div class="receipt-grid" id="receipt-grid">
+        <!-- Receipt cards will be dynamically inserted here -->
+      </div>
+    </div>
+  </main>
+
+  <script src="receipts.js"></script>
+  <script>
+    // Toggle user dropdown
+    document.getElementById('user-button').addEventListener('click', function() {
+      document.getElementById('user-dropdown').classList.toggle('hidden');
+    });
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function(event) {
+      const dropdown = document.getElementById('user-dropdown');
+      const userButton = document.getElementById('user-button');
+      
+      if (!dropdown.contains(event.target) && !userButton.contains(event.target)) {
+        dropdown.classList.add('hidden');
+      }
+    });
+
+    // Render receipt types
+    function renderReceiptTypes() {
+      const receiptGrid = document.getElementById('receipt-grid');
+      
+      receiptTypes.forEach(receipt => {
+        const card = document.createElement('div');
+        card.className = 'card receipt-card';
+        card.innerHTML = `
+          <div class="card-header">
+            <h3>${receipt.name}</h3>
+            <p>${receipt.description}</p>
+          </div>
+          <div class="card-body receipt-icon">
+            ${receipt.icon}
+          </div>
+        `;
+        
+        card.addEventListener('click', () => {
+          // Store selected receipt type in localStorage
+          localStorage.setItem('selectedReceiptType', JSON.stringify(receipt));
+          window.location.href = 'create-receipt.html';
+        });
+        
+        receiptGrid.appendChild(card);
+      });
+    }
+
+    // Initialize dashboard
+    renderReceiptTypes();
+  </script>
+</body>
+</html>
